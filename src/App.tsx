@@ -10,7 +10,7 @@ import { GridItemType } from './types/GridItemType'
 const App = () => {
   const [playing, setPlaying] = useState<boolean>(false)
   const [timeElapsed, setTimeElapsed] = useState<number>(0)
-  const [moveCOunt, setMoveCount] = useState<number>(0)
+  const [moveCount, setMoveCount] = useState<number>(0)
   const [shownCount, setShownCount] = useState<number>(0)
   const [gridItems, setGridItems] = useState<GridItemType[]>([])
 
@@ -21,31 +21,28 @@ const App = () => {
     setTimeElapsed(0)
     setMoveCount(0)
     setShownCount(0)
+
     //passo 2 - criar grid
     //2.1 - Criar grid vazio
     let tmpGrid: GridItemType[] = []
     for(let i=0; i < (items.length * 2 ); i++) {
-      tmpGrid.push({
-        item: null,
-        permanentShow: false,
-        shown: false
-      })
+      tmpGrid.push({ item: null, permanentShow: false, shown: false })
+    }
 
     for (let w = 0; w < 2; w++){
-      for(let i = 0; i < items.length; i ++) {
+      for(let i = 0; i < items.length; i++) {
         let pos = -1
-        while (pos < 0 || gridItems[pos].item !== null) {
+        while (pos < 0 || tmpGrid[pos].item !== null) {
           pos = Math.floor(Math.random() * (items.length * 2))
         }
         tmpGrid[pos].item = i
       }
     }
-    }
 
     //2.2 - preencher o grid
 
     //2.3 jogar no state
-    setGridItems(gridItems)
+    setGridItems(tmpGrid)
 
     // passo 3 - começar o jogo
     setPlaying(true)
@@ -67,7 +64,7 @@ const App = () => {
     <C.GridArea>
       <C.Grid>
       
-      </C.Grid>>
+      </C.Grid>
     </C.GridArea>
    </C.Container>
   )
