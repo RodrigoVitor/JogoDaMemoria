@@ -31,6 +31,48 @@ const App = () => {
     return () => clearInterval(timer)
   }, [playing, timeElapsed])
 
+  useEffect(() => {
+    if(shownCount === 2) {
+    //Verificar se os abertos são iguais
+      let opened = gridItems.filter(item => item.shown === true)
+      if(opened.length === 2) {
+        if(opened[0].item === opened[1].item) {
+        //v1 - se eles foram iguais, tornarem permanentes
+        let tmpGrid = [...gridItems]
+
+          for(let i in tmpGrid) {
+            if(tmpGrid[i].shown) {
+              tmpGrid[i].permanentShow = true
+              tmpGrid[i].shown = false
+            }
+          }
+          setGridItems(tmpGrid)
+          setShownCount(0)
+        } else {
+          //v2 - Se não são iguais fechar todos os icones
+          let tmpGrid = [...gridItems]
+
+          setTimeout(() => {
+            for( let i in tmpGrid) {
+              tmpGrid[i].shown = false 
+            }
+            setGridItems(tmpGrid)
+            setShownCount(0)
+          }, 1000)
+        }
+        
+        setMoveCount(moveCount => moveCount + 1)
+      } 
+    }
+  },[shownCount, gridItems])
+
+  //verificar se o jogo acabou
+  useEffect(() => {
+    if(moveCount > 0 && gridItems.every(item => item.permanentShow === true)) {
+      setPlaying(false)
+    }
+  },[moveCount, gridItems])
+
   const resetAndCreateGrid = () => {
     // paso 1 - resetar o jogo
     setTimeElapsed(0)
@@ -84,7 +126,7 @@ const App = () => {
       </C.LogoLink>
       <C.InfoArea>
         <InfoItem label="Tempo" value={formatTimerElapsed(timeElapsed)}/>
-        <InfoItem label="Movimentos" value="00"/>
+        <InfoItem label="Movimentos" value={moveCount.toString()}/>
       </C.InfoArea>
       <Button label='Reniciar' onClick={resetAndCreateGrid} icon={RestartIcon} />
     </C.Info>
