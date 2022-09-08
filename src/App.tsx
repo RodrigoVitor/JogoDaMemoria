@@ -10,6 +10,7 @@ import { items } from './data/item'
 
 import RestartIcon from './svgs/restart.svg'
 import devmemory from './assets/devmemory_logo.png'
+import { formatTimerElapsed } from './helpers/formatTimerElapsed'
 
 const App = () => {
   const [playing, setPlaying] = useState<boolean>(false)
@@ -19,6 +20,16 @@ const App = () => {
   const [gridItems, setGridItems] = useState<GridItemType[]>([])
 
   useEffect(() => resetAndCreateGrid, [])
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if(playing) {
+        setTimeElapsed(timeElapsed + 1)
+      }
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [playing, timeElapsed])
 
   const resetAndCreateGrid = () => {
     // paso 1 - resetar o jogo
@@ -63,7 +74,7 @@ const App = () => {
         <img src={devmemory} width="200" alt="" />
       </C.LogoLink>
       <C.InfoArea>
-        <InfoItem label="Tempo" value="00:00"/>
+        <InfoItem label="Tempo" value={formatTimerElapsed(timeElapsed)}/>
         <InfoItem label="Movimentos" value="00"/>
       </C.InfoArea>
       <Button label='Reniciar' onClick={resetAndCreateGrid} icon={RestartIcon} />
