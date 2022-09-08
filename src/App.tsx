@@ -64,7 +64,16 @@ const App = () => {
   }
 
   const handleItemClick = (index: number) => {
+    if(playing && index !== null && shownCount < 2) {
+      let tmpGrid = [...gridItems]
+      
+      if (tmpGrid[index].permanentShow === false && tmpGrid[index].shown === false) {
+        tmpGrid[index].shown = true
+        setShownCount(shownCount + 1)
+      }
 
+      setGridItems(tmpGrid)
+    }
   }
 
   return (
@@ -83,7 +92,7 @@ const App = () => {
     <C.GridArea>
       <C.Grid>
         {gridItems.map((item, index) => (
-          <GridItem key={index} item={item} onClick={() => handleItemClick} />
+          <GridItem key={index} item={item} onClick={() => handleItemClick(index)} />
         ))}
       </C.Grid>
     </C.GridArea>
